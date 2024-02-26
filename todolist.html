@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #todo-container {
+      width: 300px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .task {
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .task input[type="checkbox"] {
+      margin-right: 10px;
+    }
+
+    .task button {
+      background-color: #ff6347;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="todo-container">
+    <h2>To-Do List</h2>
+    <input type="text" id="new-task" placeholder="Add a new task">
+    <button onclick="addTask()">Add</button>
+    <div id="tasks"></div>
+
+    <script>
+      // Load tasks from local storage
+      document.getElementById('tasks').innerHTML = localStorage.getItem('tasks') || '';
+
+      function addTask() {
+        const newTaskText = document.getElementById('new-task').value.trim();
+
+        if (newTaskText !== '') {
+          const taskElement = document.createElement('div');
+          taskElement.className = 'task';
+
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.addEventListener('change', updateLocalStorage);
+
+          const taskText = document.createElement('span');
+          taskText.textContent = newTaskText;
+
+          const deleteButton = document.createElement('button');
+          deleteButton.textContent = 'Delete';
+          deleteButton.addEventListener('click', deleteTask);
+
+          taskElement.appendChild(checkbox);
+          taskElement.appendChild(taskText);
+          taskElement.appendChild(deleteButton);
+
+          document.getElementById('tasks').appendChild(taskElement);
+
+          // Clear input
+          document.getElementById('new-task').value = '';
+
+          // Save tasks to local storage
+          updateLocalStorage();
+        }
+      }
+
+      function deleteTask() {
+        this.parentElement.remove();
+        updateLocalStorage();
+      }
+
+      function updateLocalStorage() {
+        const tasksHTML = document.getElementById('tasks').innerHTML;
+        localStorage.setItem('tasks', tasksHTML);
+      }
+    </script>
+  </div>
+</body>
+</html>
